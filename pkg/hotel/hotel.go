@@ -46,6 +46,11 @@ func (s *HotelService) AddHotel(payload Hotel) error {
 // AddSampleHotels adds some sample Hotels to the database
 func (s *HotelService) GetHotel() error {
 	fmt.Println("Add Sample hotel service called")
+	err := s.storage.GetHotel()
+
+	if err != nil {
+		panic(err.Error())
+	}
 	return nil
 }
 
