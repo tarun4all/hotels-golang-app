@@ -14,13 +14,11 @@ type Storage struct {
 }
 
 func (db *Storage) AddHotel(payload ht.Hotel) error {
-	fmt.Println("Add hotel called Payload >> ", payload)
-
-	insertQuery, _, _ := sq.Insert("hotels").Columns("name", "age").Values("moe", 13).ToSql()
+	insertQuery, args, _ := sq.Insert("geolocation").Columns("ipAddress", "countryCode", "country", "city", "latitude", "longitude", "createdAt").Values(payload.IpAddress, payload.CountryCode, payload.Country, payload.City, payload.Latitude, payload.Longitude, payload.Created).ToSql()
 	fmt.Println(insertQuery)
 
-	insert, err := db.db.Query(insertQuery, "Tarun", 10)
-
+	insert, err := db.db.Query(insertQuery, args...)
+	fmt.Println(" >>> ", insert)
 	if err != nil {
 		panic(err.Error())
 	}
@@ -29,13 +27,27 @@ func (db *Storage) AddHotel(payload ht.Hotel) error {
 	return nil
 }
 
-func (db *Storage) GetHotel() error {
-	query := sq.Select("*").From("hotels")
-	query = query.Where(sq.Eq{"id": nil})
-	sql, _, _ := query.ToSql()
-	fmt.Println(sql, *db)
+func (db *Storage) GetHotel(requestIPAddr string) ([]ht.Hotel, error) {
+	query := sq.Select("*").From("geolocation")
+	query = query.Where(sq.Eq{"ipAddress": requestIPAddr})
+	sql, args, _ := query.ToSql()
 
-	return nil
+	rows, err := db.db.Query(sql, args...)
+
+	var geolocations []ht.Hotel
+	defer rows.Close()
+	for rows.Next() {
+		var ipAddress, countryCode, country, city, latitude, longitude, createdAt string
+		if err := rows.Scan(&ipAddress, &countryCode, &country, &city, &latitude, &longitude, &createdAt); err != nil {
+			return geolocations, err
+		}
+		geolocations = append(geolocations, ht.New(ipAddress, countryCode, country, city, latitude, longitude, createdAt))
+	}
+
+	if err != nil {
+		return geolocations, err
+	}
+	return geolocations, nil
 }
 
 func New() *Storage {
