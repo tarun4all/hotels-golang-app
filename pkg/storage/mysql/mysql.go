@@ -13,7 +13,7 @@ type Storage struct {
 	db *sql.DB
 }
 
-func (db *Storage) AddHotel(payload ht.Hotel) error {
+func (db *Storage) AddGeolocation(payload ht.Geolocation) error {
 	insertQuery, args, _ := sq.Insert("geolocation").Columns("ipAddress", "countryCode", "country", "city", "latitude", "longitude", "createdAt").Values(payload.IpAddress, payload.CountryCode, payload.Country, payload.City, payload.Latitude, payload.Longitude, payload.Created).ToSql()
 	fmt.Println(insertQuery)
 
@@ -27,14 +27,14 @@ func (db *Storage) AddHotel(payload ht.Hotel) error {
 	return nil
 }
 
-func (db *Storage) GetHotel(requestIPAddr string) ([]ht.Hotel, error) {
+func (db *Storage) GetGeolocation(requestIPAddr string) ([]ht.Geolocation, error) {
 	query := sq.Select("*").From("geolocation")
 	query = query.Where(sq.Eq{"ipAddress": requestIPAddr})
 	sql, args, _ := query.ToSql()
 
 	rows, err := db.db.Query(sql, args...)
 
-	var geolocations []ht.Hotel
+	var geolocations []ht.Geolocation
 	defer rows.Close()
 	for rows.Next() {
 		var ipAddress, countryCode, country, city, latitude, longitude, createdAt string

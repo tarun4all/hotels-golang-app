@@ -3,14 +3,14 @@ package main
 import (
 	"fmt"
 
-	ht "github.com/tarun4all/hotels-golang-app/pkg/hotel"
+	gl "github.com/tarun4all/hotels-golang-app/pkg/geolocation"
 	rest "github.com/tarun4all/hotels-golang-app/pkg/http/rest"
 	storage "github.com/tarun4all/hotels-golang-app/pkg/storage/mysql"
 )
 
 func main() {
 	storage := storage.New()
-	s := ht.NewService(storage)
+	s := gl.NewService(storage)
 
 	// hotel := ht.New()
 	// s.AddHotel(hotel)

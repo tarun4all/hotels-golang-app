@@ -9,7 +9,7 @@ import (
 	"regexp"
 	"strings"
 
-	ht "github.com/tarun4all/hotels-golang-app/pkg/hotel"
+	gl "github.com/tarun4all/hotels-golang-app/pkg/geolocation"
 )
 
 func getQueryParams(url string) map[string]string {
@@ -38,7 +38,7 @@ func getURLParam(url string) (string, error) {
 	return urlParams[2], nil
 }
 
-func GetHotel(hotelService *ht.HotelService) func(w http.ResponseWriter, r *http.Request) {
+func GetGeolocation(geolocationService *gl.GeolocationService) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		requestIPAddr, err := getURLParam(r.RequestURI)
 		fmt.Println(requestIPAddr, err)
@@ -47,13 +47,13 @@ func GetHotel(hotelService *ht.HotelService) func(w http.ResponseWriter, r *http
 			w.WriteHeader(400) // Return 400 Bad Request.
 			return
 		}
-		info, err := hotelService.GetHotel(requestIPAddr)
+		info, err := geolocationService.GetGeolocation(requestIPAddr)
 		json.NewEncoder(w).Encode(info)
 	}
 }
 
-func Init(hotelService *ht.HotelService) {
+func Init(geolocationService *gl.GeolocationService) {
 	fmt.Println("Setting up router...")
-	http.HandleFunc("/hotel/", GetHotel(hotelService))
+	http.HandleFunc("/hotel/", GetGeolocation(geolocationService))
 	log.Fatal(http.ListenAndServe(":3001", nil))
 }
