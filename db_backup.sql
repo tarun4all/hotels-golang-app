@@ -29,16 +29,6 @@ CREATE TABLE `geolocation` (
   `city` varchar(60) NOT NULL,
   `latitude` varchar(20) NOT NULL,
   `longitude` varchar(20) NOT NULL,
-  `createdAt` varchar(40) NOT NULL
+  `createdAt` varchar(60) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `geolocation`
---
-
-LOCK TABLES `geolocation` WRITE;
-/*!40000 ALTER TABLE `geolocation` DISABLE KEYS */;
-INSERT INTO `geolocation` VALUES ('192.168.0.1','IN','INdia','Delhi','78.888888','78.888888','2021-12-10 17:36:47.36631554');
-/*!40000 ALTER TABLE `geolocation` ENABLE KEYS */;
-UNLOCK TABLES;
