@@ -59,6 +59,6 @@ func (s *GeolocationService) GetGeolocation(requestIPAddr string) ([]Geolocation
 	return info, nil
 }
 
-func NewService(st GeolocationStorage) *Geolocation {
-	return &Geolocation{st}
+func NewService(st GeolocationStorage) *GeolocationService {
+	return &GeolocationService{st}
 }
