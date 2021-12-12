@@ -52,7 +52,7 @@ func GetGeolocation(geolocationService *gl.GeolocationService) func(w http.Respo
 	}
 }
 
-func Init(geolocationService *gl.GeolocationService) {
+func New(geolocationService *gl.GeolocationService) {
 	fmt.Println("Setting up router...")
 	http.HandleFunc("/hotel/", GetGeolocation(geolocationService))
 	log.Fatal(http.ListenAndServe(":3001", nil))

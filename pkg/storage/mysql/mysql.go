@@ -1,8 +1,8 @@
 package mysql
 
+// backup command sudo mysqldump test > db_backup.sql
 import (
 	"database/sql"
-	"fmt"
 
 	sq "github.com/Masterminds/squirrel"
 	_ "github.com/go-sql-driver/mysql"
@@ -15,10 +15,9 @@ type Storage struct {
 
 func (db *Storage) AddGeolocation(payload gl.Geolocation) error {
 	insertQuery, args, _ := sq.Insert("geolocation").Columns("ipAddress", "countryCode", "country", "city", "latitude", "longitude", "createdAt").Values(payload.IpAddress, payload.CountryCode, payload.Country, payload.City, payload.Latitude, payload.Longitude, payload.Created).ToSql()
-	fmt.Println(insertQuery)
 
 	insert, err := db.db.Query(insertQuery, args...)
-	fmt.Println(" >>> ", insert)
+
 	if err != nil {
 		panic(err.Error())
 	}

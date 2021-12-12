@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-
 	gl "github.com/tarun4all/hotels-golang-app/pkg/geolocation"
 	rest "github.com/tarun4all/hotels-golang-app/pkg/http/rest"
 	storage "github.com/tarun4all/hotels-golang-app/pkg/storage/mysql"
@@ -14,7 +12,6 @@ func main() {
 
 	// hotel := ht.New()
 	// s.AddHotel(hotel)
-	fmt.Println(s)
 
-	rest.Init(s)
+	rest.New(s)
 }

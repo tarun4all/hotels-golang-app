@@ -25,8 +25,8 @@ DROP TABLE IF EXISTS `geolocation`;
 CREATE TABLE `geolocation` (
   `ipAddress` varchar(20) NOT NULL,
   `countryCode` varchar(2) NOT NULL,
-  `country` varchar(30) NOT NULL,
-  `city` varchar(30) NOT NULL,
+  `country` varchar(60) NOT NULL,
+  `city` varchar(60) NOT NULL,
   `latitude` varchar(20) NOT NULL,
   `longitude` varchar(20) NOT NULL,
   `createdAt` varchar(40) NOT NULL
