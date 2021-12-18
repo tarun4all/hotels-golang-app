@@ -38,22 +38,29 @@ func getURLParam(url string) (string, error) {
 	return urlParams[2], nil
 }
 
-func GetGeolocation(geolocationService *gl.GeolocationService) func(w http.ResponseWriter, r *http.Request) {
-	return func(w http.ResponseWriter, r *http.Request) {
-		requestIPAddr, err := getURLParam(r.RequestURI)
-		fmt.Println(requestIPAddr, err)
-		if err != nil {
-			log.Print(err.Error())
-			w.WriteHeader(400) // Return 400 Bad Request.
-			return
-		}
-		info, err := geolocationService.GetGeolocation(requestIPAddr)
-		json.NewEncoder(w).Encode(info)
-	}
+type HttpHandler struct {
+	service *gl.GeolocationService
 }
 
-func New(geolocationService *gl.GeolocationService) {
-	fmt.Println("Setting up router...")
-	http.HandleFunc("/hotel/", GetGeolocation(geolocationService))
-	log.Fatal(http.ListenAndServe(":3001", nil))
+func (handler *HttpHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	handler.get(w, r)
+}
+
+func (handler *HttpHandler) get(w http.ResponseWriter, r *http.Request) {
+	requestIPAddr, err := getURLParam(r.RequestURI)
+	fmt.Println(requestIPAddr, err)
+	if err != nil {
+		log.Print(err.Error())
+		w.WriteHeader(400) // Return 400 Bad Request.
+		return
+	}
+	info, err := handler.service.GetGeolocation(requestIPAddr)
+	json.NewEncoder(w).Encode(info)
+}
+
+func NewHandler(service *gl.GeolocationService) http.Handler {
+	var handler = HttpHandler{
+		service: service,
+	}
+	return &handler
 }
