@@ -2,46 +2,45 @@ package main
 
 import (
 	"fmt"
+	"os"
 
 	gl "github.com/tarun4all/hotels-golang-app/pkg/geolocation"
-	parser "github.com/tarun4all/hotels-golang-app/pkg/importer/csv"
+	importer "github.com/tarun4all/hotels-golang-app/pkg/importers"
 	storage "github.com/tarun4all/hotels-golang-app/pkg/storage/mysql"
 )
 
 func main() {
-	storage := storage.New()
+	DB_URL := os.Getenv("DB_URL")
+
+	storage := storage.New(DB_URL)
 	s := gl.NewService(storage)
+	csvImporter := importer.NewCsvImporter()
 
-	// channel for csv rows
-	readChannel := make(chan []string)
+	readChannel, err := csvImporter.Import("../../data_dump.csv")
 
-	go func() {
-		var validRecord = 0
-		for data := range readChannel {
-			geolocation := gl.Geolocation{}
-			err := geolocation.Parse(data)
+	if err != nil {
+		fmt.Println(err)
+	}
 
-			if err != nil {
-				continue
-			}
+	for data := range readChannel {
+		geolocation := gl.Geolocation{}
+		err := geolocation.Parse(data)
 
-			err = geolocation.ValidatePayload()
-
-			if err != nil {
-				continue
-			}
-
-			err = s.AddGeolocation(geolocation)
-
-			if err != nil {
-				continue
-			}
-
-			validRecord++
+		if err != nil {
+			continue
 		}
 
-		fmt.Printf("No. of Valid records : %v \n", validRecord)
-	}()
+		err = geolocation.ValidatePayload()
 
-	parser.ReadAllRecords(readChannel)
+		if err != nil {
+			continue
+		}
+
+		err = s.AddGeolocation(geolocation)
+
+		if err != nil {
+			continue
+		}
+
+	}
 }

@@ -49,8 +49,8 @@ func (db *Storage) GetGeolocation(requestIPAddr string) ([]gl.Geolocation, error
 	return geolocations, nil
 }
 
-func New() *Storage {
-	db, err := sql.Open("mysql", "admin:admin@tcp(127.0.0.1:3306)/test")
+func New(DB_URL string) *Storage {
+	db, err := sql.Open("mysql", DB_URL)
 
 	if err != nil {
 		panic(err.Error())

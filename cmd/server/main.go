@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	gl "github.com/tarun4all/hotels-golang-app/pkg/geolocation"
 	rest "github.com/tarun4all/hotels-golang-app/pkg/httpHandler/rest"
@@ -11,7 +12,10 @@ import (
 )
 
 func main() {
-	storage := storage.New()
+	//admin:admin@tcp(127.0.0.1:3306)/test
+	DB_URL := os.Getenv("DB_URL")
+
+	storage := storage.New(DB_URL)
 	s := gl.NewService(storage)
 
 	// hotel := ht.New()
