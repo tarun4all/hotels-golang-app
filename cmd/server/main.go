@@ -12,7 +12,6 @@ import (
 )
 
 func main() {
-	//admin:admin@tcp(127.0.0.1:3306)/test
 	DB_URL := os.Getenv("DB_URL")
 
 	storage := storage.New(DB_URL)
