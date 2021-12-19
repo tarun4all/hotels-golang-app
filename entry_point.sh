@@ -1,5 +1,5 @@
 echo "Waiting for DB to start..."
-./wait-for database:33060 -- echo "Database Has Started..."
+./wait-for database:3306 -- echo "Database Has Started..."
 # https://github.com/eficode/wait-for
 
 echo "Preparing Database..."
